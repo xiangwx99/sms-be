@@ -1,6 +1,6 @@
 const express = require('express')
-const Students = require('./models/students')
-const md5 = require('blueimp-md5')
+const Teachers = require('../models/teachers')
+const jwt = require('jsonwebtoken');
 //err_code: 0 : 服务端错误
 //err_code: 1 : 成功
 //err_code: 2 : 重复
@@ -8,11 +8,11 @@ const md5 = require('blueimp-md5')
 
 const router = express.Router()
 
-router.post('/login', (req, res) => {
+router.post('/loginTea', (req, res) => {
   let body = req.body
-  Students.findOne({
-    phoneNumber: body.phoneNumber,
-    password: body.password},
+  Teachers.findOne({
+      phoneNumber: body.phoneNumber,
+      password: body.password},
     (err, data) => {
       if (err) {
         return res.status(500).json({
@@ -26,18 +26,26 @@ router.post('/login', (req, res) => {
           message: '账号或者密码错误'
         })
       }
-      res.status(200).json({
-        err_code: 1,
-        success: true,
-        message: '登录成功'
+      /** 生成token并且返回 **/
+      const secret = 'coderwhh'
+      jwt.sign({
+        name: body.phoneNumber,
+        exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 7)
+      }, secret, (err, token) => {
+        res.status(200).json({
+          err_code: 1,
+          success: true,
+          message: '登录成功',
+          token: token
+        })
       })
     }
   )
 })
 
-router.post('/addStudent',(req, res) => {
+router.post('/addTeacher',(req, res) => {
   let body = req.body
-  Students.findOne({phoneNumber: body.phoneNumber}, (err, data) => {
+  Teachers.findOne({phoneNumber: body.phoneNumber}, (err, data) => {
     if (err) {
       return res.status(500).json({
         err_code: 0,
@@ -52,7 +60,7 @@ router.post('/addStudent',(req, res) => {
         message: '账号已存在, 请重试'
       })
     }
-    new Students(body).save((err, student) => {
+    new Teachers(body).save((err, teacher) => {
       if (err) {
         return res.status(500).json({
           err_code: 0,
@@ -62,7 +70,7 @@ router.post('/addStudent',(req, res) => {
       res.status(200).json({
         err_code: 1,
         success: true,
-        message: 'add student success'
+        message: 'add teacher success'
       })
     })
   })
