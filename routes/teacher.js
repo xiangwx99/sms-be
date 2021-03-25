@@ -42,6 +42,7 @@ router.post("/loginTea", (req, res) => {
             success: true,
             message: "登录成功",
             token: token,
+            userInfo: data,
           });
         }
       );
@@ -87,6 +88,24 @@ router.get("/downTemplate", (req, res) => {
     err_code: 0,
     fileUrl: "http://127.0.0.1/assets/excel/swpu-template.xls",
     status: true,
+  });
+});
+
+router.post("/queryTeacherById", (req, res) => {
+  let { _id } = { ...req.body };
+  Teachers.find({ _id: _id }, (err, data) => {
+    if (err) {
+      return res.status(500).json({
+        err_code: 0,
+        success: false,
+      });
+    } else {
+      return res.status(200).json({
+        err_code: 1,
+        success: true,
+        data: data,
+      });
+    }
   });
 });
 

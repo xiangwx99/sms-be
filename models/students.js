@@ -16,7 +16,12 @@ const StudentsSchema = new Schema({
   gender: { type: String, require: true },
   major: { type: String, require: true },
   classes: { type: String, require: true },
+  grade: { type: String, require: true },
   name: { type: String, require: true },
+  nation: { type: String },
+  age: { type: Number },
+  idcard: { type: String },
+  avatar: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
 
