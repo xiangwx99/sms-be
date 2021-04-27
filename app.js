@@ -2,6 +2,7 @@ const express = require("express");
 const studentRouter = require("./routes/student");
 const teacherRouter = require("./routes/teacher");
 const fileRouter = require("./routes/uploadFiles");
+const messageRouter = require("./routes/messages");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
@@ -41,6 +42,7 @@ app.use((req, res, next) => {
 app.use(studentRouter);
 app.use(teacherRouter);
 app.use(fileRouter);
+app.use(messageRouter);
 
 app.listen(8000, function () {
   console.log("running 8000...");

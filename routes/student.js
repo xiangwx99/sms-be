@@ -202,4 +202,3 @@ router.post("/resetStudentPassword", (req, res) => {
 });
 
 module.exports = router;
-console.log('=====》 ')
