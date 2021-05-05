@@ -1,13 +1,12 @@
 const express = require("express");
 const Messages = require("../models/messages.js");
 
-
 const router = express.Router();
 
 router.post("/addMessages", (req, res) => {
-  let content =req.body
+  let content = req.body;
   new Messages(content).save((err, student) => {
-    if(err) {
+    if (err) {
       res.status(200).json({
         err_code: 0,
         success: false,
@@ -26,23 +25,22 @@ router.post("/addMessages", (req, res) => {
 router.post("/queryMessages", (req, res) => {
   let { page, size } = { ...req.body };
 
-  Messages.find( (err, data) => {
+  Messages.find((err, data) => {
     if (err) {
       return res.status(500).json({
         err_code: 0,
         success: false,
       });
     } else {
-      let dataCopy = [].concat(data);
+      let dataCopy = [].concat(data).reverse();
       return res.status(200).json({
         err_code: 1,
         success: true,
         data: dataCopy.splice(size * (page - 1), size),
-        total: data.length
+        total: data.length,
       });
     }
   });
 });
-
 
 module.exports = router;

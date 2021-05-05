@@ -3,6 +3,7 @@ const studentRouter = require("./routes/student");
 const teacherRouter = require("./routes/teacher");
 const fileRouter = require("./routes/uploadFiles");
 const messageRouter = require("./routes/messages");
+const examInfoRouter = require("./routes/examInfo");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
@@ -43,6 +44,7 @@ app.use(studentRouter);
 app.use(teacherRouter);
 app.use(fileRouter);
 app.use(messageRouter);
+app.use(examInfoRouter);
 
 app.listen(8000, function () {
   console.log("running 8000...");
