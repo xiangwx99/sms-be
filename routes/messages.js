@@ -43,4 +43,21 @@ router.post("/queryMessages", (req, res) => {
   });
 });
 
+router.post("/deleteMessage", (req, res) => {
+  let _id = req.body._id;
+  Messages.remove({ _id: _id }, (err, data) => {
+    if (err) {
+      return res.status(500).json({
+        err_code: 0,
+        success: false,
+      });
+    } else {
+      return res.status(200).json({
+        err_code: 1,
+        success: true,
+      });
+    }
+  });
+});
+
 module.exports = router;
