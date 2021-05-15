@@ -4,6 +4,7 @@ const teacherRouter = require("./routes/teacher");
 const fileRouter = require("./routes/uploadFiles");
 const messageRouter = require("./routes/messages");
 const examInfoRouter = require("./routes/examInfo");
+const assignExamRouter = require("./routes/assignExam");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
@@ -45,6 +46,7 @@ app.use(teacherRouter);
 app.use(fileRouter);
 app.use(messageRouter);
 app.use(examInfoRouter);
+app.use(assignExamRouter);
 
 app.listen(8000, function () {
   console.log("running 8000...");
