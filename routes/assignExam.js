@@ -4,6 +4,7 @@ const Students = require("../models/students");
 
 const router = express.Router();
 
+// 分配试卷
 router.post("/assignExam", (req, res) => {
   let { query, tea_id, exam_id, content } = req.body;
   let assignExam = {};
@@ -62,6 +63,7 @@ router.post("/queryAssignExam", (req, res) => {
   });
 });
 
+// 批阅考试
 router.post("/queryAssignExamById", (req, res) => {
   let { _id } = req.body;
   AssignExam.findById(_id, (err, data) => {
@@ -80,6 +82,7 @@ router.post("/queryAssignExamById", (req, res) => {
   });
 });
 
+// 教师批阅试卷
 router.post("/updateAssignExamById", (req, res) => {
   let { id, status, content } = req.body;
   AssignExam.findByIdAndUpdate(
@@ -102,6 +105,7 @@ router.post("/updateAssignExamById", (req, res) => {
   );
 });
 
+// 查询教师负责的所有试卷 => 试卷批阅表
 router.post("/queryAssignExamByTeaId", (req, res) => {
   let { id } = req.body;
   AssignExam.find({ tea_id: id }, (err, data) => {
@@ -137,6 +141,64 @@ router.post("/queryAssignExamByTeaId", (req, res) => {
               count: data.length,
               data: resData,
               assignData: data,
+            });
+          }
+        });
+      });
+    }
+  });
+});
+
+// 教师条件查询
+router.post("/queryByCondition", (req, res) => {
+  let { id, examName, major } = req.body;
+  // console.log(id, examName, major);
+  AssignExam.find({ tea_id: id }, (err, data) => {
+    if (err) {
+      return res.status(500).json({
+        err_code: 0,
+        success: false,
+      });
+    } else {
+      let resData = [];
+      data.forEach((item, index) => {
+        Students.findById(item.stu_id, (err, stuData) => {
+          let obj = {};
+          obj.major = stuData.major;
+          obj.classes = stuData.classes;
+          obj.grade = stuData.grade;
+          obj.department = stuData.department;
+          obj.name = stuData.name;
+          obj.content = item.content;
+          obj.createdAt = item.createdAt;
+          obj.exam_id = item.exam_id;
+          obj.status = item.status;
+          obj.stu_id = item.stu_id;
+          obj.tea_id = item.tea_id;
+          obj.time = item.time;
+          obj._id = item._id;
+          resData.push(obj);
+          if (resData.length === data.length) {
+            resData = resData.filter((item, index) => {
+              if (examName.length > 0 && major.length > 0) {
+                return (
+                  examName.includes(item.content.examName) &&
+                  major.includes(item.major)
+                );
+              } else if (examName.length > 0 && major.length === 0) {
+                return examName.includes(item.content.examName);
+              } else if (examName.length === 0 && major.length > 0) {
+                return major.includes(item.major);
+              } else {
+                return true;
+              }
+            });
+            return res.status(200).json({
+              err_code: 1,
+              success: true,
+              message: "查询成功",
+              count: resData.length,
+              data: resData,
             });
           }
         });
