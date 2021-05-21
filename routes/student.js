@@ -82,7 +82,7 @@ router.post("/queryStudent", (req, res) => {
   let args = {};
   grade.length > 0 && (args.grade = { $in: grade });
   classes.length > 0 && (args.classes = { $in: classes });
-  phoneNumber && (args.phoneNumber = phoneNumber);
+  phoneNumber && (args.phoneNumber = { $regex: phoneNumber });
 
   Students.find(args, (err, data) => {
     if (err) {

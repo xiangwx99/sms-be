@@ -8,13 +8,30 @@ const assignExamRouter = require("./routes/assignExam");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const expressWs = require("express-ws");
+const Messages = require("./models/messages.js");
 
 const app = express();
+expressWs(app);
 app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.ws("/addMessages", function (ws, req) {
+  ws.send("server: 成功连接建立!😄");
+  ws.on("message", function (msg) {
+    let res = JSON.stringify({ data: msg, success: true });
+    new Messages({ content: msg }).save((err, mes) => {
+      if (err) {
+        let errRes = JSON.stringify({ data: msg, success: false });
+        ws.send(errRes);
+      } else {
+        ws.send(res);
+      }
+    });
+  });
+});
 app.use((req, res, next) => {
   const url = req.url;
   if (url === "/login" || url === "/loginTea" || url === "/addTeacher") {
