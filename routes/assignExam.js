@@ -207,4 +207,59 @@ router.post("/queryByCondition", (req, res) => {
   });
 });
 
+// 成绩分析
+router.post("/analysis", (req, res) => {
+  let { id, examName, department, major, grade, classes } = req.body;
+  // console.log(id, examName, department, major, grade, classes);
+  // let stuCon = { department: department, major: major, grade: grade };
+  // classes.length > 0 && (stuCon.classes = { $in: classes });
+  // console.log(stuCon);
+  AssignExam.find({ tea_id: id }, (err, data) => {
+    if (err) {
+      return res.status(500).json({
+        err_code: 0,
+        success: false,
+      });
+    } else {
+      let resData = [];
+      data.forEach((item, index) => {
+        Students.findById(item.stu_id, (err, stuData) => {
+          let obj = {};
+          obj.major = stuData.major;
+          obj.classes = stuData.classes;
+          obj.grade = stuData.grade;
+          obj.department = stuData.department;
+          obj.name = stuData.name;
+          obj.content = item.content;
+          obj.createdAt = item.createdAt;
+          obj.exam_id = item.exam_id;
+          obj.status = item.status;
+          obj.stu_id = item.stu_id;
+          obj.tea_id = item.tea_id;
+          obj.time = item.time;
+          obj._id = item._id;
+          resData.push(obj);
+          if (resData.length === data.length) {
+            resData = resData.filter((item, index) => {
+              return (
+                item.department === department &&
+                item.major === major &&
+                item.grade === grade &&
+                item.content.examName === examName &&
+                (classes.length ? classes.includes(item.classes) : true)
+              );
+            });
+            return res.status(200).json({
+              err_code: 1,
+              success: true,
+              message: "查询成功",
+              count: resData.length,
+              data: resData,
+            });
+          }
+        });
+      });
+    }
+  });
+});
 module.exports = router;
