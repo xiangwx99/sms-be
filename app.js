@@ -19,7 +19,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.ws("/addMessages", function (ws, req) {
-  ws.send("server: 成功连接建立!😄");
   ws.on("message", function (msg) {
     let res = JSON.stringify({ data: msg, success: true });
     new Messages({ content: msg }).save((err, mes) => {
