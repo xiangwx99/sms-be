@@ -34,6 +34,7 @@ app.ws("/addMessages", function (ws, req) {
 app.use((req, res, next) => {
   const url = req.url;
   if (url === "/login" || url === "/loginTea" || url === "/addTeacher") {
+    // 请求的借口如果为以上部分则跳过token验证
     next();
   } else {
     const secret = "coderwhh";
@@ -43,7 +44,6 @@ app.use((req, res, next) => {
           message: "登录信息已过期, 请重新登陆!",
         });
       } else {
-        // 设置有效时间为30天
         let effectTime = decoded.exp,
           curTime = Math.floor(Date.now() / 1000);
         if (effectTime < curTime) {
