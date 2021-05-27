@@ -5,6 +5,11 @@ const fileRouter = require("./routes/uploadFiles");
 const messageRouter = require("./routes/messages");
 const examInfoRouter = require("./routes/examInfo");
 const assignExamRouter = require("./routes/assignExam");
+const choiceExamRouter = require("./routes/choice");
+const mulChoiceExamRouter = require("./routes/mulChoice");
+const issueExamRouter = require("./routes/issue");
+const completionExamRouter = require("./routes/completion");
+const shortAnswerExamRouter = require("./routes/shortAnswer");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
@@ -63,6 +68,11 @@ app.use(fileRouter);
 app.use(messageRouter);
 app.use(examInfoRouter);
 app.use(assignExamRouter);
+app.use(choiceExamRouter);
+app.use(mulChoiceExamRouter);
+app.use(issueExamRouter);
+app.use(completionExamRouter);
+app.use(shortAnswerExamRouter);
 
 app.listen(8000, function () {
   console.log("running 8000...");
